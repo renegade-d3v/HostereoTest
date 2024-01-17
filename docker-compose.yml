@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+    hostereo:
+        container_name: hostereo
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+        ports:
+            - "8000:80"
+        volumes:
+            - .:/var/www/html
+            - ./docker/virtual-host.conf:/etc/apache2/sites-enabled/virtual-host.conf
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.hostereo-local-http.rule=Host(`hostereo.local`,`www.hostereo.local`)
+            - traefik.http.routers.hostereo-local-http.entrypoints=http
+            - traefik.http.routers.hostereo-local-http.service=hostereo-local-http
+            - traefik.http.services.hostereo-local-http.loadbalancer.server.port=80
+            - traefik.http.services.hostereo-local-http.loadbalancer.server.scheme=http
+        external_links:
+            - mysql:mysql
+            - mailhog
+        network_mode: bridge
