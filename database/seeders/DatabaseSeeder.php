@@ -14,6 +14,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             LanguagesTableSeeder::class,
+            TagSeeder::class,
+            PostTableSeeder::class,
+            PostTranslateTableSeeder::class
         ]);
     }
 }
