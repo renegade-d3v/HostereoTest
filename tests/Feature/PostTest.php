@@ -90,7 +90,8 @@ class PostTest extends TestCase
         Post::factory(50)->create();
 
         $value = 'Aut';
-        $response = $this->json('GET', '/api/posts/search/'. $value);
+        $response = $this->withHeaders(['Content-Language' => 'ua'])
+            ->json('GET', '/api/posts/search/'. $value);
 
         $response->assertStatus(200);
     }
