@@ -94,4 +94,25 @@ class PostRepository
     {
         return $this->find($id)->delete();
     }
+
+    /**
+     * @param string $value
+     * @return Collection
+     */
+    public function getFilteredPosts(string $value): Collection
+    {
+        $query = $this->model->translated();
+
+        if ($value) {
+            $query->where(function ($query) use ($value) {
+                $query->whereHas('translations', function ($translationQuery) use ($value) {
+                    $translationQuery->where('title', 'like', '%' . $value . '%')
+                        ->orWhere('description', 'like', '%' . $value . '%')
+                        ->orWhere('content', 'like', '%' . $value . '%');
+                });
+            });
+        }
+
+        return $query->get();
+    }
 }
